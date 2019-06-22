@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<!-- saved from url=(0053)http://jx.yueke8.net/Ewm/studentShow.aspx?tfId=446472 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+<style type="text/css" abt="234"></style><script>//remove 17173 video ad
+doAdblock();
+function doAdblock(){
+    (function() {
+        function A() {}
+        A.prototype = {
+            rules: {
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+//remove baidu search ad
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var aa = function(){
+            var all = document.body.querySelectorAll("#content_left div,#content_left table");
+            for(var i = 0; i < all.length; i++){
+                if(/display:\s?(table|block)\s!important/.test(all[i].getAttribute("style"))){all[i].style.display= "none";all[i].style.visibility='hidden';}
+            }
+            all = document.body.querySelectorAll('.result.c-container[id="1"]');
+            //if(all.length == 1) return;
+            for(var i = 0; i < all.length; i++){
+                if(all[i].innerHTML && all[i].innerHTML.indexOf('广告')>-1){
+                    all[i].style.display= "none";all[i].style.visibility='hidden';
+                }
+            }
+        }
+        aa();
+        document.getElementById('wrapper_wrapper').addEventListener('DOMSubtreeModified',aa)
+    };
+}
+//remove sohu video ad
+if (document.URL.indexOf("tv.sohu.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//remove 56.com video ad
+if (document.URL.indexOf("56.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//fore iqiyi enable html5 player function
+if (document.URL.indexOf("iqiyi.com") >= 0){
+    if (document.cookie.indexOf("player_forcedType=h5_VOD")==-1){
+        document.cookie='player_forcedType=h5_VOD'
+        if(localStorage.reloadTime && Date.now() - parseInt(localStorage.reloadTime)<60000){
+            console.log('no reload')
+        }else{
+            location.reload()
+            localStorage.reloadTime = Date.now();
+        }
+    }
+}
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style></head>
+<body>
+    <div>驾校名称：贵州贵龙机动车驾驶技能培训有限公司</div>
+    <div>分校名称：顺利瑞通分校</div>
+    <div>学员姓名：123</div>
+    <div>手机号码：12345</div>
+    <div>身份证号：12345</div>
+    <div>报名日期：2019-06-22</div>
+    <div>培训班别：普通班</div>
+    <div>教练组：</div>
+    <div><img src="data:image/gif;base64,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" height="100"></div>
+
+
+</body></html>
